@@ -114,23 +114,11 @@ def diccionarios():
     return ((encriptar_ida, encriptar_regreso),(desencriptar_ida, desencriptar_regreso))
 
 def idioma():
-    """Se definen los diccionarios para las letras repetidas del español y el inglés"""
+    """Se definen las listas para las letras repetidas del español y el inglés"""
     #Diccionario del español
-    spanish = {"E": 4, "e": 4,
-               "A": 0, "a": 0,
-               "O": 14, "o": 14,
-               "S": 18, "s": 18,
-               "R": 17, "r": 17,
-               "N": 13, "n": 13,
-               "I": 8, "i": 8}
+    spanish = ["E", "A","O", "S", "R", "N", "I"]
     #Diccionario del inglés
-    english = {"E": 4, "e": 4,
-               "A": 0, "a": 0,
-               "R": 17, "r": 17,
-               "I": 8, "i": 8,
-               "O": 14, "o": 14,
-               "T": 19, "t": 19,
-               "N": 13, "n": 13}
+    english = ["E", "A", "R", "I", "O", "T", "N"]
     return(spanish,english)
 
 #Función que se utilizan para elegir el número al inicio del programa
@@ -150,6 +138,13 @@ def is_int(number):
         return True
     except ValueError:
         return False
+
+def is_inTupleList(list, element):
+    """Función que determina si existe un elemento en una lista de tuplas (En la primera posición)"""
+    for tuple in list:
+        if tuple[0] == element:
+            return True
+    return False
 
 #Función auxiliar para la función encriptar
 def congruencia(numero, modulo):
@@ -222,10 +217,10 @@ def desencriptar_clave(texto,k):
     texto_desencriptado = ''.join(texto_descifrado)
     print(f"El texto descifrado con la clave {k} es {texto_desencriptado}.")
 
+
 def analisis(texto):
     """Función que analiza el texto y lo desencripta"""
-#####################################################################################
-
+    
     valid_lan = False
 
     while not valid_lan:
@@ -244,24 +239,64 @@ def analisis(texto):
         else:
             print("Opción inválida.")
 
+    letras_frecuentes = []
     if option_lan == 0:
-        #Su texto está en español
-        texto_2 = input("Ingresa el texto que quieres desencriptar: ")
-        analisis(texto_2)
+        letras_frecuentes = idioma()[0]
+        option_lan = "español"
 
-    if option_lan == 1:
-        #Este es el método de fuerza bruta
-        texto_2 = input("Ingresa el texto que quieres desencriptar: ")
-        desencriptar_fb(texto_2)
+    elif option_lan == 1:
+        letras_frecuentes = idioma()[1]
+        option_lan = "inglés"
 
+    lista_frecuentes = ''
+    for letter in letras_frecuentes:
+        lista_frecuentes += f"{letter} "
+    
+    #Convierte todo el texto para que sea UpperCase (Consistente)
+    string = texto.upper()
+    
+    #Crear un diccionario con las repeticiones de cada letra    
+    repeticiones = {}
 
+    for char in string:
+        if char in repeticiones:
+            repeticiones[char] += 1
+        elif char != " ":
+                repeticiones[char] = 1            
 
+    #Crea un nuevo diccionario en el que se ordenan los elementos de acuerdo a 
+    # los valores de cada llave (letra) en el original.
+    repeticiones_orden = sorted(repeticiones.items(), key=lambda x: x[1], reverse=True)
+    
+    #Prepara el string para imprimir la lista de repeticiones en una linea
+    lista_repeticiones = ''
+    for char, count in repeticiones_orden:
+        lista_repeticiones += f"{char}:{count} "
+    print("\nConteo de letras en el texto (Descendente): ")
+    print(lista_repeticiones)
 
-
-
-
-
-
+    print(f"Elegiste el idioma {option_lan}. Las letras más frecuentes son:")
+    print(f"{lista_frecuentes}\n")
+    
+    letra_1 = ''
+    letra_2 = ''
+    valid_first = False
+    while not valid_first:
+        letra_1 = input("Elige una de las letras más repetidas del texto: ")
+        if is_inTupleList(repeticiones, letra_1):
+            valid_first = True
+        else:
+            print("Opción inválida")
+    valid_second = False
+    while not valid_second:
+        letra_2 = input(f"Elige una de las letras más frecuentes en el {option_lan}: ")
+        if letra_2 in letras_frecuentes:
+            valid_second = True
+        else:
+            print("Opción inválida")
+    print(f"Letras elegidas:")
+    print(f"Mas repetidas del texto: {letra_1}")
+    print(f"Mas frecuente del idioma: {letra_2}")
 
 def desencriptar_fb(texto):
     """Función que desencripta el texto sin clave y con fuerza bruta"""
