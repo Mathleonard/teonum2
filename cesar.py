@@ -272,31 +272,56 @@ def analisis(texto):
     lista_repeticiones = ''
     for char, count in repeticiones_orden:
         lista_repeticiones += f"{char}:{count} "
-    print("\nConteo de letras en el texto (Descendente): ")
-    print(lista_repeticiones)
-
-    print(f"Elegiste el idioma {option_lan}. Las letras más frecuentes son:")
-    print(f"{lista_frecuentes}\n")
     
-    letra_1 = ''
-    letra_2 = ''
-    valid_first = False
-    while not valid_first:
-        letra_1 = input("Elige una de las letras más repetidas del texto: ")
-        if is_inTupleList(repeticiones, letra_1):
-            valid_first = True
-        else:
-            print("Opción inválida")
-    valid_second = False
-    while not valid_second:
-        letra_2 = input(f"Elige una de las letras más frecuentes en el {option_lan}: ")
-        if letra_2 in letras_frecuentes:
-            valid_second = True
-        else:
-            print("Opción inválida")
-    print(f"Letras elegidas:")
-    print(f"Mas repetidas del texto: {letra_1}")
-    print(f"Mas frecuente del idioma: {letra_2}")
+    valid_text = False
+    while not valid_text:
+        print("\nConteo de letras en el texto (Descendente): ")
+        print(lista_repeticiones)
+
+        print(f"Elegiste el idioma {option_lan}. Las letras más frecuentes son:")
+        print(f"{lista_frecuentes}\n")
+        
+        letra_1 = ''
+        letra_2 = ''
+        valid_first = False
+        while not valid_first:
+            letra_1 = input("Elige una de las letras más repetidas del texto: ")
+            if is_inTupleList(repeticiones, letra_1):
+                valid_first = True
+            else:
+                print("Opción inválida")
+        valid_second = False
+        while not valid_second:
+            letra_2 = input(f"Elige una de las letras más frecuentes en el {option_lan}: ")
+            if letra_2 in letras_frecuentes:
+                valid_second = True
+            else:
+                print("Opción inválida")
+        print(f"Letras elegidas:")
+        print(f"Mas repetidas del texto: {letra_1}")
+        print(f"Mas frecuente del idioma: {letra_2}")
+        
+        desencriptar_ida = diccionarios()[1][0]
+        if letra_1 in desencriptar_ida:
+            letra_1 = desencriptar_ida[letra_1]
+        if letra_2 in desencriptar_ida:
+            letra_2 = desencriptar_ida[letra_2]
+            
+        letra_3 = letra_1 - letra_2
+        
+        k = congruencia(letra_3, 26)
+        desencriptar_clave(texto, k)
+        
+        valid_input = False
+        while not valid_input:
+            input_user = input("Si ese es el texto que buscas escribe (1), de lo contrario escribe (0): ")
+            if input_user == "1":
+                valid_text = True
+                valid_input = True
+            elif input_user == "0":
+                valid_input = True
+            else:
+                print("Opcion invalida")
 
 def desencriptar_fb(texto):
     """Función que desencripta el texto sin clave y con fuerza bruta"""
