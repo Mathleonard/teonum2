@@ -194,7 +194,7 @@ def encriptar(texto,k,l):
 
     #Juntar todos los caracteres del texto_cifrado_2 en un string
     texto_encriptado = ''.join(texto_cifrado_2)
-    print(f"El texto cifrado con la clave {k} es {texto_encriptado}.")
+    print(f"El texto cifrado con las claves a={k} y k={l} es {texto_encriptado}.")
 
 #Función auxiliar para el desencriptado, el cual utiliza el algortimo de Euclides
 def euclides(a, b):
@@ -244,7 +244,7 @@ def desencriptar_clave(texto,k,l):
             texto_descifrado[i] = desencriptar_regreso[texto_descifrado[i]]
 
     texto_desencriptado = ''.join(texto_descifrado)
-    print(f"El texto descifrado con la clave {k} es {texto_desencriptado}.")
+    print(f"El texto descifrado con las claves a={k} y k={l} es {texto_desencriptado}.")
 
 def solcon(d,letra_1,letra_2,x1):
     """Función que resuelve ecuaciones de congruencias"""
