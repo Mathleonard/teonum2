@@ -435,8 +435,6 @@ def cesar():
 
         elif option_2 == 1:
 
-            ####################################################################
-
             valid_input_3 = False
 
             while not valid_input_3:
