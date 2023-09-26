@@ -140,10 +140,10 @@ def is_int(number):
         return False
 
 #Función auxiliar para el análisis de frecuencias
-def is_inTupleList(list, element):
+def is_in_tuple_list(lista, element):
     """Función que determina si hay un elemento en una lista de tuplas (En la primera posición)"""
-    for tuple in list:
-        if tuple[0] == element:
+    for tupla in lista:
+        if tupla[0] == element:
             return True
     return False
 
@@ -287,7 +287,7 @@ def analisis(texto):
         valid_first = False
         while not valid_first:
             letra_1 = input("Elige una de las letras más repetidas del texto: ")
-            if is_inTupleList(repeticiones, letra_1):
+            if is_in_tuple_list(repeticiones, letra_1):
                 valid_first = True
             else:
                 print("Opción inválida")
