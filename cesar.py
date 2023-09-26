@@ -132,15 +132,16 @@ def is_number(string):
 
 #Función que se utilizan para elegir el número al inicio del programa
 def is_int(number):
-    """Funcion que determina si un numero es entero"""
+    """Funcion que determina si un número es entero"""
     try:
         int(number)
         return True
     except ValueError:
         return False
 
+#Función auxiliar para el análisis de frecuencias
 def is_inTupleList(list, element):
-    """Función que determina si existe un elemento en una lista de tuplas (En la primera posición)"""
+    """Función que determina si hay un elemento en una lista de tuplas (En la primera posición)"""
     for tuple in list:
         if tuple[0] == element:
             return True
@@ -220,7 +221,7 @@ def desencriptar_clave(texto,k):
 
 def analisis(texto):
     """Función que analiza el texto y lo desencripta"""
-    
+
     valid_lan = False
 
     while not valid_lan:
@@ -251,28 +252,28 @@ def analisis(texto):
     lista_frecuentes = ''
     for letter in letras_frecuentes:
         lista_frecuentes += f"{letter} "
-    
+
     #Convierte todo el texto para que sea UpperCase (Consistente)
     string = texto.upper()
-    
-    #Crear un diccionario con las repeticiones de cada letra    
+
+    #Crear un diccionario con las repeticiones de cada letra
     repeticiones = {}
 
     for char in string:
         if char in repeticiones:
             repeticiones[char] += 1
         elif char != " ":
-                repeticiones[char] = 1            
+            repeticiones[char] = 1
 
-    #Crea un nuevo diccionario en el que se ordenan los elementos de acuerdo a 
+    #Crea un nuevo diccionario en el que se ordenan los elementos de acuerdo a
     # los valores de cada llave (letra) en el original.
     repeticiones_orden = sorted(repeticiones.items(), key=lambda x: x[1], reverse=True)
-    
+
     #Prepara el string para imprimir la lista de repeticiones en una linea
     lista_repeticiones = ''
     for char, count in repeticiones_orden:
         lista_repeticiones += f"{char}:{count} "
-    
+
     valid_text = False
     while not valid_text:
         print("\nConteo de letras en el texto (Descendente): ")
@@ -280,7 +281,7 @@ def analisis(texto):
 
         print(f"Elegiste el idioma {option_lan}. Las letras más frecuentes son:")
         print(f"{lista_frecuentes}\n")
-        
+
         letra_1 = ''
         letra_2 = ''
         valid_first = False
@@ -297,24 +298,24 @@ def analisis(texto):
                 valid_second = True
             else:
                 print("Opción inválida")
-        print(f"Letras elegidas:")
+        print("Letras elegidas: ")
         print(f"Mas repetidas del texto: {letra_1}")
         print(f"Mas frecuente del idioma: {letra_2}")
-        
+
         desencriptar_ida = diccionarios()[1][0]
         if letra_1 in desencriptar_ida:
             letra_1 = desencriptar_ida[letra_1]
         if letra_2 in desencriptar_ida:
             letra_2 = desencriptar_ida[letra_2]
-            
+
         letra_3 = letra_1 - letra_2
-        
+
         k = congruencia(letra_3, 26)
         desencriptar_clave(texto, k)
-        
+
         valid_input = False
         while not valid_input:
-            input_user = input("Si ese es el texto que buscas escribe (1), de lo contrario escribe (0): ")
+            input_user = input("Si el texto es correcto, escribe (1), si no escribe (0): ")
             if input_user == "1":
                 valid_text = True
                 valid_input = True
