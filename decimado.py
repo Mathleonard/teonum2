@@ -140,10 +140,10 @@ def is_int(number):
         return False
 
 #Función auxiliar para el análisis de frecuencias
-def is_inTupleList(list, element):
+def is_in_tuple_list(lista, element):
     """Función que determina si hay un elemento en una lista de tuplas (En la primera posición)"""
-    for tuple in list:
-        if tuple[0] == element:
+    for tupla in lista:
+        if tupla[0] == element:
             return True
     return False
 
@@ -215,7 +215,7 @@ def euclides(a, b):
         u1 = u
         v0 = v1
         v1 = v
-    return  u0
+    return  a, u0
 
 def desencriptar_clave(texto,k):
     """Función que desencripta el texto con clave"""
@@ -224,7 +224,7 @@ def desencriptar_clave(texto,k):
     texto_descifrado = []
 
     #Esta parte del código proviene del semestre pasado: inverso.py
-    x0 = euclides(k, 26)
+    x0 = euclides(k, 26)[1]
     inverso = x0%26
 
     for char in texto:
@@ -244,6 +244,24 @@ def desencriptar_clave(texto,k):
     texto_desencriptado = ''.join(texto_descifrado)
     print(f"El texto descifrado con la clave {k} es {texto_desencriptado}.")
 
+def solcon(d,letra_1,letra_2,x1):
+    """Función que resuelve ecuaciones de congruencias"""
+
+    soluciones = []
+
+    b26 = euclides(letra_1,26)[0]
+    a26 = euclides(letra_2,26)[0]
+    e = letra_1 / d
+    x0 = x1 * e
+    div = 26 / a26
+    for i in range(b26):
+        y = x0 + (div * i)
+        soluciones.append(y)
+    for j in soluciones:
+        j26 = euclides(j,26)[0]
+        if j26 == 1:
+            return j
+    print("La congruencia no tiene solución.")
 
 def analisis(texto):
     """Función que analiza el texto y lo desencripta"""
@@ -313,7 +331,7 @@ def analisis(texto):
         valid_first = False
         while not valid_first:
             letra_1 = input("Elige una de las letras más repetidas del texto: ")
-            if is_inTupleList(repeticiones, letra_1):
+            if is_in_tuple_list(repeticiones, letra_1):
                 valid_first = True
             else:
                 print("Opción inválida")
@@ -334,9 +352,9 @@ def analisis(texto):
         if letra_2 in desencriptar_ida:
             letra_2 = desencriptar_ida[letra_2]
 
-        letra_3 = letra_1 - letra_2
-
-        k = congruencia(letra_3, 26)
+        d, x1 = euclides(letra_2, 26)
+        s = solcon(d,letra_1,letra_2,x1)
+        k = congruencia(s,26)
         desencriptar_clave(texto, k)
 
         valid_input = False
@@ -364,12 +382,19 @@ def desencriptar_fb(texto):
 
     textos_descifrados = []
 
-    for k in [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]:
+    primosrelativos26 = [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]
+
+    for k in primosrelativos26:
         copia = texto_descifrado[:]
+
+        x0 = euclides(k,26)[1]
+        inverso = x0%26
+        print(inverso)
+
         for i, char in enumerate(copia):
         # Si el caracter es un entero, se le aplica la regla
             if isinstance(char, int):
-                copia[i] *= k
+                copia[i] *= inverso
                 copia[i] = congruencia(copia[i], 26)
 
             if copia[i] in desencriptar_regreso:
@@ -379,7 +404,7 @@ def desencriptar_fb(texto):
 
     for k, texto in enumerate(textos_descifrados):
         #¿Sí imprime la clave correcta? :P
-        print(f"k = {k}, {texto}\n")
+        print(f"k = {primosrelativos26[k]}, {texto}\n")
 
 def decimado():
     #Se ponen entre tres comillas lo que queremos que diga que hace la función
