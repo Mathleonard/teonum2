@@ -149,21 +149,132 @@ def algoritmo_div(dividendo, divisor):
         mcd = abs(divisor)
         return mcd
 
+def longtxt(texto):
+    #Da la longitud del texto sin ningún otro caracter
+
+    encriptar_ida = diccionarios()[0][0]
+
+    texto_bruto = []
+
+    for char in texto:
+        if char in encriptar_ida:
+            texto_bruto.append(char)
+
+    texto_bruto_final = ''.join(texto_bruto)
+
+    l = len(texto_bruto_final)
+
+    return l, texto_bruto_final
+
+def multi(a_1_1, a_1_2, a_2_1, a_2_2, pareja):
+    """Función para multiplicar matrices"""
+    
+    p_2_0 = (a_1_1 * pareja[0]) + (a_1_2 * pareja[1])
+    p_2_1 = (a_2_1 * pareja[0]) + (a_2_2 * pareja[1])
+
+    return (p_2_0, p_2_1)
+
 def encriptar_hill(a_1_1, a_1_2, a_2_1, a_2_2, texto):
     """Función para encriptar el mensaje"""
-    print(f"{a_1_1}, {a_1_2}, {a_2_1}, {a_2_2}, {texto}")
-    #1) Función para hallar la longitud del texto
-    #if - Longitud par (residuo al dividir entre 2 == 0, entonces seguir)
-    # else - añadir una letra al final del texto, que sea la misma que la
-    # del texto original
-        #Vuelva a llamar a la función, y tiene que suceder la primera
-    #2) Asociarles número a las letras
-    #3) Hacer lista para parejas originales
-    #4) Hacer parejas (paint)
-    #5) Hacer lista para parejas encriptadas
-    #6) Función para multiplicar matrices
-    #7) Asociarles un número a cada entrada de cada pareja
-    #8) Unir todo :P
+
+    encriptar_ida, encriptar_regreso = diccionarios()[0]
+
+    texto_cifrado = []
+
+    long, texto_bruto = longtxt(texto)
+
+    if long%2 != 0:
+        texto_bruto += texto_bruto[-1]
+
+    #Para cada char (caracter) en el texto, hacer lo siguiente
+    for char in texto_bruto:
+        #Asociar el número a la letra
+        texto_cifrado.append(encriptar_ida[char])
+
+    texto_cifrado_parejas = []
+
+    # Recorrer la lista original en pasos de 2 en 2
+    for i in range(0, len(texto_cifrado), 2):
+        if i + 1 < len(texto_cifrado):
+            pareja = (texto_cifrado[i], texto_cifrado[i + 1])
+            texto_cifrado_parejas.append(pareja)
+
+    texto_cifrado_2 = ''
+
+    for pareja in texto_cifrado_parejas:
+        a, b = multi(a_1_1, a_1_2, a_2_1, a_2_2, pareja)
+        c = congruencia(a)
+        d = congruencia(b)
+        texto_cifrado_2 += encriptar_regreso[c]
+        texto_cifrado_2 += encriptar_regreso[d]
+
+    print(f"Tu texto cifrado es: {texto_cifrado_2}.")
+
+def euclides(a, b):
+    """Función que halla el máximo común divisor entre dos números"""
+    if b == 0:
+        return 0,1,0
+    u0 = 1
+    u1 = 0
+    v0 = 0
+    v1 = 1
+    while b != 0:
+        q = a//b
+        r = a - b * q
+        u = u0 - q * u1
+        v = v0 - q * v1
+        a = b
+        b = r
+        u0 = u1
+        u1 = u
+        v0 = v1
+        v1 = v
+    return  a, u0
+
+def minversa(a_1_1, a_1_2, a_2_1, a_2_2, det):
+    x0 = euclides(det, 26)[1]
+    inverso = x0%26
+    b_1_1 = inverso * a_2_2
+    b_1_2 = (-1) * (inverso * a_1_2)
+    b_2_1 = (-1) * (inverso * a_2_1)
+    b_2_2 = inverso * a_1_1
+    
+    return b_1_1, b_1_2, b_2_1, b_2_2
+
+def desencriptar_hill(a_1_1, a_1_2, a_2_1, a_2_2, det, texto):
+    """Función para desencriptar el mensaje"""
+
+    desencriptar_ida, desencriptar_regreso = diccionarios()[1]
+
+    texto_2 = longtxt(texto)[1]
+
+    texto_descifrado = []
+
+    #Para cada char (caracter) en el texto, hacer lo siguiente
+    for char in texto_2:
+        #Asociar el número a la letra
+        texto_descifrado.append(desencriptar_ida[char])
+
+    texto_descifrado_parejas = []
+
+    # Recorrer la lista original en pasos de 2 en 2
+    for i in range(0, len(texto_descifrado), 2):
+        if i + 1 < len(texto_descifrado):
+            pareja = (texto_descifrado[i], texto_descifrado[i + 1])
+            texto_descifrado_parejas.append(pareja)
+
+    texto_descifrado_2 = ''
+
+    m, n, o, p = minversa(a_1_1, a_1_2, a_2_1, a_2_2, det)
+
+    for pareja in texto_descifrado_parejas:
+        a, b = multi(m, n, o, p, pareja)
+        c = congruencia(a)
+        d = congruencia(b)
+        texto_descifrado_2 += desencriptar_regreso[c]
+        texto_descifrado_2 += desencriptar_regreso[d]
+
+    print(f"Tu texto descifrado es: {texto_descifrado_2}.")
 
 def hill():
     """Función principal, lo que se mostrará al usuario"""
@@ -230,7 +341,58 @@ def hill():
                     print("La determinante de tu matriz no es primo relativo a 26.")
         texto_1 = input("Ingresa el texto que quieres encriptar: ")
         encriptar_hill(a_1_1, a_1_2, a_2_1, a_2_2, texto_1)
-    if option_1 == 1:
-        print(option_1)
+        
+    elif option_1 == 1:
+        input_det = False
+        while not input_det:
+            input_1_1 = False
+            while not input_1_1:
+                a_1_1 = input("Escribe el primer número entero de tu matriz clave: ")
+                if is_number(a_1_1):
+                    a_1_1 = float(a_1_1)
+                    if is_int(a_1_1):
+                        a_1_1 = int(a_1_1)
+                        input_1_1 = True
+                else:
+                    print("Opción inválida.")
+            input_1_2 = False
+            while not input_1_2:
+                a_1_2 = input("Escribe el segundo número entero de tu matriz clave: ")
+                if is_number(a_1_2):
+                    a_1_2 = float(a_1_2)
+                    if is_int(a_1_2):
+                        a_1_2 = int(a_1_2)
+                        input_1_2 = True
+                else:
+                    print("Opción inválida.")
+            input_2_1 = False
+            while not input_2_1:
+                a_2_1 = input("Escribe el tercer número entero de tu matriz clave: ")
+                if is_number(a_2_1):
+                    a_2_1 = float(a_2_1)
+                    if is_int(a_2_1):
+                        a_2_1 = int(a_2_1)
+                        input_2_1 = True
+                else:
+                    print("Opción inválida.")
+            input_2_2 = False
+            while not input_2_2:
+                a_2_2 = input("Escribe el cuarto número entero de tu matriz clave: ")
+                if is_number(a_2_2):
+                    a_2_2 = float(a_2_2)
+                    if is_int(a_2_2):
+                        a_2_2 = int(a_2_2)
+                        input_2_2 = True
+                else:
+                    print("Opción inválida.")
+                det = determinante(a_1_1, a_1_2, a_2_1, a_2_2)
+                cong_det = congruencia(det)
+                mcd = algoritmo_div(26, cong_det)
+                if mcd == 1:
+                    input_det = True
+                else:
+                    print("La determinante de tu matriz no es primo relativo a 26.")
+        texto_1 = input("Ingresa el texto que quieres desencriptar: ")
+        desencriptar_hill(a_1_1, a_1_2, a_2_1, a_2_2, cong_det, texto_1)
 
 hill()
