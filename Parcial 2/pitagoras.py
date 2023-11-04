@@ -12,6 +12,18 @@ def algoritmo_div(n, a):
         s = abs(a)
         return s
 
+def ternaPrimitiva(x,y,z):
+    """Función auxiliar que determina si una terna es primitiva"""
+    mcdxy = algoritmo_div(x,y)
+    mcdantz = algoritmo_div(mcdxy,z)
+    return mcdantz
+
+def teoremaPitagoras(x,y,z):
+    """Función auxiliar que comprueba el teorema de Pitágoras"""
+    if (x ** 2) + (y ** 2) == z ** 2:
+        return True
+    else:
+        return False
 
 def pitagoras():
     """Función principal"""
@@ -26,17 +38,23 @@ def pitagoras():
             valid_input = True
 
     if x == 0:
-        n = int(input("Escribe tu primer número: "))
-        m = int(input("Escribe tu segundo número: "))
-        if algoritmo_div(n,m) == 1:
-            print(algoritmo_div(n,m))
+        m = int(input("Escribe tu primer número m: "))
+        n = int(input("Escribe tu segundo número n: "))
+        if (algoritmo_div(m,n) == 1) and (m % 2 == 0) and (n % 2 == 1) and (m > n):
+            p = 2 * m * n
+            q = (m ** 2) - (n ** 2)
+            r = (m ** 2) + (n ** 2)
+            print(f"Tu terna pitagórica primitiva es ({p},{q},{r}).")
         else:
             print("No elegiste dos números adecuados.")
 
     elif x == 1:
-        a = int(input("Escribe tu primer número: "))
-        b = int(input("Escribe tu segundo número: "))
-        c = int(input("Escribe tu tercer número: "))
-        print(a,b,c)
+        a = int(input("Escribe tu primer número x (sin cuadrado): "))
+        b = int(input("Escribe tu segundo número y (sin cuadrado): "))
+        c = int(input("Escribe tu tercer número z (sin cuadrado): "))
+        if (ternaPrimitiva(a,b,c)) == 1 and (teoremaPitagoras(a,b,c)) == True:
+            print(f"Tu terna ({a},{b},{c}) es una terna pitagórica primitiva.")
+        else:
+            print(f"Tu terna ({a},{b},{c}) no es una terna pitagórica primitiva.")
 
 pitagoras()
